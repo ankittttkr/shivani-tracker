@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30 Day Habit Tracker</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body{font-family:Arial,sans-serif;margin:20px;background:#f4f7fb;color:#222}.container{max-width:1200px;margin:auto}.card{background:#fff;padding:20px;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.08);margin-bottom:20px}h1{text-align:center}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}.stat{padding:12px;background:#eef3ff;border-radius:12px;text-align:center}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:8px;text-align:center}th{background:#2d6cdf;color:#fff;position:sticky;top:0}tr:nth-child(even){background:#fafafa}input[type=checkbox]{transform:scale(1.2)}button{padding:10px 16px;border:none;border-radius:10px;background:#2d6cdf;color:#fff;cursor:pointer;margin:5px}.danger{background:#d9534f}canvas{max-height:420px}
+</style>
+</head>
+<body>
+<div class='container'>
+<div class='card'><h1>30 Day Habit Tracker</h1><div class='grid' id='stats'></div><button onclick='resetData()' class='danger'>Reset</button></div>
+<div class='card table-wrap'><table id='tracker'></table></div>
+<div class='card'><canvas id='chart'></canvas></div>
+</div>
+<script>
+const subjects=['Physics','Biology','Chemistry','English','Hindi','GK'];
+let data=JSON.parse(localStorage.getItem('habit30'))||{};
+for(let d=1;d<=30;d++){if(!data[d]) data[d]={}; subjects.forEach(s=>{if(data[d][s]===undefined) data[d][s]=false;});}
+function save(){localStorage.setItem('habit30',JSON.stringify(data));render();}
+function render(){const table=document.getElementById('tracker');let html='<tr><th>Day</th>'+subjects.map(s=>'<th>'+s+'</th>').join('')+'<th>%</th></tr>';for(let d=1;d<=30;d++){let done=0;html+='<tr><td>Day '+d+'</td>';subjects.forEach(s=>{if(data[d][s]) done++; html+='<td><input type="checkbox" '+(data[d][s]?'checked':'')+' onchange="toggle('+d+',\''+s+'\')"></td>';});html+='<td>'+Math.round(done/subjects.length*100)+'%</td></tr>';}table.innerHTML=html;updateStats();drawChart();}
+function toggle(day,sub){data[day][sub]=!data[day][sub];save();}
+function updateStats(){let total=30*subjects.length,done=0;let subjTotals={};subjects.forEach(s=>subjTotals[s]=0);for(let d=1;d<=30;d++){subjects.forEach(s=>{if(data[d][s]){done++;subjTotals[s]++;}});}let html='<div class="stat"><b>Overall</b><br>'+Math.round(done/total*100)+'%</div>';subjects.forEach(s=>{html+='<div class="stat"><b>'+s+'</b><br>'+Math.round(subjTotals[s]/30*100)+'%</div>';});document.getElementById('stats').innerHTML=html;}
+let chart;function drawChart(){const vals=subjects.map(s=>{let c=0;for(let d=1;d<=30;d++) if(data[d][s]) c++; return c;});const ctx=document.getElementById('chart');if(chart) chart.destroy();chart=new Chart(ctx,{type:'bar',data:{labels:subjects,datasets:[{label:'Completed Days',data:vals}]},options:{responsive:true,plugins:{legend:{display:true}},scales:{y:{beginAtZero:true,max:30}}}});}
+function resetData(){if(confirm('Clear all records?')){localStorage.removeItem('habit30');location.reload();}}
+render();
+</script>
+</body>
+</html>
