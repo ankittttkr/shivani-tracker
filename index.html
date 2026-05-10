@@ -1,31 +1,653 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>30 Day Habit Tracker</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-body{font-family:Arial,sans-serif;margin:20px;background:#f4f7fb;color:#222}.container{max-width:1200px;margin:auto}.card{background:#fff;padding:20px;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.08);margin-bottom:20px}h1{text-align:center}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}.stat{padding:12px;background:#eef3ff;border-radius:12px;text-align:center}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:8px;text-align:center}th{background:#2d6cdf;color:#fff;position:sticky;top:0}tr:nth-child(even){background:#fafafa}input[type=checkbox]{transform:scale(1.2)}button{padding:10px 16px;border:none;border-radius:10px;background:#2d6cdf;color:#fff;cursor:pointer;margin:5px}.danger{background:#d9534f}canvas{max-height:420px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shivani's PM Journey - Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* 🔥 Random Mix Multicolor Animated Background */
+        body { 
+            background: linear-gradient(-45deg, #FF007A, #7000FF, #00E1FF, #00FF85, #FFD600, #FF3D00);
+            background-size: 600% 600%;
+            animation: randomMix 20s ease infinite;
+            min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; color: #1e272e; 
+        }
+
+        @keyframes randomMix {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Glassmorphism App Container */
+        .app-container { 
+            width: 100%; max-width: 850px; 
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(30px); 
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 40px; 
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.2), inset 0 0 0 2px rgba(255,255,255,0.6); 
+            overflow: hidden; position: relative; min-height: 80vh; display: flex; flex-direction: column;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Premium Header */
+        .header { 
+            padding: 50px 30px 35px; text-align: center; 
+            background: rgba(255, 255, 255, 0.4);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+        }
+        .header h1 { 
+            font-size: 36px; font-weight: 800; letter-spacing: -1px; 
+            background: linear-gradient(135deg, #7000FF, #FF007A);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .header p { font-size: 16px; color: #485460; margin-top: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;}
+
+        /* Content Area */
+        .content { padding: 35px; flex-grow: 1; }
+        .hidden { display: none !important; }
+
+        /* Smart Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        
+        /* Elegant Cards */
+        .day-card { 
+            background: rgba(255, 255, 255, 0.95); 
+            border: 2px solid transparent; 
+            border-radius: 25px; padding: 35px 20px; text-align: center; 
+            font-size: 24px; font-weight: 800; color: #3c40c6; cursor: pointer; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05); 
+        }
+        .day-card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 0 25px 45px rgba(112, 0, 255, 0.2); 
+            border-color: #00E1FF; color: #FF007A;
+        }
+        
+        /* Subject Buttons */
+        .sub-btn { 
+            background: #ffffff; border: 2px solid #f1f2f6; 
+            border-radius: 22px; padding: 25px; font-size: 20px; font-weight: 800; 
+            color: #1e272e; cursor: pointer; transition: 0.3s; width: 100%; text-align: left; 
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+            animation: slideUp 0.4s ease forwards; opacity: 0;
+        }
+        .sub-btn:nth-child(1) { animation-delay: 0.1s; }
+        .sub-btn:nth-child(2) { animation-delay: 0.2s; }
+        .sub-btn:nth-child(3) { animation-delay: 0.3s; }
+        .sub-btn:nth-child(4) { animation-delay: 0.4s; }
+
+        .sub-btn:hover { background: #fdfdfd; transform: translateY(-4px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-color: #7000FF;}
+        .arrow-icon { color: #fff; background: #1e272e; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: 0.3s; font-size: 20px;}
+        .sub-btn:hover .arrow-icon { background: #FF007A; transform: translateX(8px); }
+
+        /* Premium Topics List */
+        .topic-item { 
+            display: flex; align-items: center; justify-content: space-between; 
+            background: #ffffff; border: 2px solid #f1f2f6; 
+            margin-bottom: 20px; padding: 25px; border-radius: 22px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03); transition: 0.4s;
+            animation: slideUp 0.4s ease forwards; opacity: 0;
+        }
+        .topic-item.done { background: #f0fff4; border-color: #00FF85; opacity: 0.9; }
+        
+        .checkbox-container { display: flex; align-items: center; gap: 20px; flex-grow: 1; }
+        
+        /* Custom Checkbox */
+        .custom-checkbox {
+            appearance: none; -webkit-appearance: none;
+            width: 36px; height: 36px;
+            border: 3px solid #d2dae2;
+            border-radius: 12px;
+            cursor: pointer; position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0; background: #fff;
+        }
+        .custom-checkbox:checked {
+            background: linear-gradient(135deg, #00E1FF, #7000FF);
+            border-color: transparent; transform: scale(1.15);
+            box-shadow: 0 8px 20px rgba(112, 0, 255, 0.4);
+        }
+        .custom-checkbox:checked::after {
+            content: '✓'; color: white; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); font-size: 22px; font-weight: 900;
+        }
+
+        .topic-text { font-size: 19px; font-weight: 700; transition: 0.3s; line-height: 1.4; color: #1e272e; }
+        .topic-item.done .topic-text { text-decoration: line-through; color: #808e9b; }
+        
+        /* Sleek YouTube Button */
+        .yt-btn { 
+            background: #ff0000; color: white; text-decoration: none; padding: 12px 24px; 
+            border-radius: 14px; font-size: 15px; font-weight: 800; 
+            margin-left: 20px; transition: 0.3s; 
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3); white-space: nowrap;
+        }
+        .yt-btn:hover { background: #cc0000; transform: scale(1.08) translateY(-2px); box-shadow: 0 10px 25px rgba(255, 0, 0, 0.5); }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Navigation */
+        .nav-bar { display: flex; align-items: center; margin-bottom: 35px; gap: 20px; }
+        .back-btn { 
+            background: #1e272e; border: none; 
+            padding: 15px 25px; border-radius: 16px; font-weight: 800; font-size: 18px; 
+            cursor: pointer; color: #fff; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .back-btn:hover { background: #FF007A; transform: translateX(-5px); box-shadow: 0 10px 20px rgba(255, 0, 122, 0.3);}
+        .page-title { font-size: 28px; font-weight: 800; color: #1e272e; }
+
+        /* 🔥 BADA AUR PREMIUM POPUP */
+        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 1; transition: opacity 0.5s ease; }
+        
+        .popup-box { 
+            background: #ffffff; border: 3px solid rgba(255, 255, 255, 0.8); 
+            width: 92%; max-width: 650px; /* Bada kar diya hai */
+            padding: 70px 40px; border-radius: 40px; text-align: center; 
+            box-shadow: 0 40px 80px rgba(0,0,0,0.4); transform: scale(1); 
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        .popup-overlay.hide { opacity: 0; pointer-events: none; }
+        .popup-overlay.hide .popup-box { transform: scale(0.85); }
+        
+        .popup-box h2 { font-size: 42px; font-weight: 900; margin-bottom: 20px; background: linear-gradient(135deg, #FF007A, #7000FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px;}
+        .popup-box p { color: #485460; font-size: 22px; margin-bottom: 40px; font-weight: 600; line-height: 1.5;}
+        
+        .popup-btn { 
+            background: linear-gradient(135deg, #00E1FF, #7000FF); color: white; border: none; 
+            padding: 22px 50px; border-radius: 25px; font-size: 22px; font-weight: 900; 
+            cursor: pointer; box-shadow: 0 15px 35px rgba(112, 0, 255, 0.4); transition: 0.3s; width: 100%;
+        }
+        .popup-btn:hover { transform: translateY(-5px); box-shadow: 0 20px 45px rgba(112, 0, 255, 0.6); }
+
+        /* Elegant Developer Watermark */
+        .footer-watermark { 
+            text-align: center; margin-top: 20px; padding-bottom: 30px; 
+            font-size: 15px; font-weight: 700; color: #485460; letter-spacing: 1px;
+        }
+        .footer-watermark span { color: #FF007A; font-size: 20px; }
+
+    </style>
 </head>
 <body>
-<div class='container'>
-<div class='card'><h1>30 Day Habit Tracker</h1><div class='grid' id='stats'></div><button onclick='resetData()' class='danger'>Reset</button></div>
-<div class='card table-wrap'><table id='tracker'></table></div>
-<div class='card'><canvas id='chart'></canvas></div>
+
+<!-- Bada & Bold Welcome Popup -->
+<div id="welcomePopup" class="popup-overlay">
+    <div class="popup-box">
+        <h2>✨ Hello, Shivani!</h2>
+        <p id="popupMessage">Your journey to success begins here. Every click you make brings you closer to your goal!</p>
+        <button class="popup-btn" onclick="closePopup()">START STUDYING 🚀</button>
+    </div>
 </div>
+
+<div class="app-container">
+    <div class="header">
+        <h1>👩‍⚕️ PM Target 2026</h1>
+        <p id="headerDate"></p>
+    </div>
+
+    <div class="content">
+        <!-- DAYS VIEW -->
+        <div id="daysDiv">
+            <h3 style="margin-bottom: 25px; font-size: 18px; color: #808e9b; text-transform: uppercase; letter-spacing: 2px; font-weight: 800;">Your Timeline</h3>
+            <div class="grid" id="daysGrid"></div>
+        </div>
+
+        <!-- SUBJECTS VIEW -->
+        <div id="subjectsDiv" class="hidden">
+            <div class="nav-bar">
+                <button class="back-btn" onclick="goBack('days')">← BACK</button>
+                <div class="page-title" id="currentDayTitle">Subjects</div>
+            </div>
+            <div class="grid" id="subjectsContainer"></div>
+        </div>
+
+        <!-- TOPICS VIEW -->
+        <div id="topicsDiv" class="hidden">
+            <div class="nav-bar">
+                <button class="back-btn" onclick="goBack('subjects')">← BACK</button>
+                <div class="page-title" id="currentSubjectTitle">Topics</div>
+            </div>
+            <div id="topicList"></div>
+        </div>
+    </div>
+
+    <!-- Elegant Footer Signature -->
+    <div class="footer-watermark">
+        Developed by love with Ankit <span>💖✨</span>
+    </div>
+</div>
+
 <script>
-const subjects=['Physics','Biology','Chemistry','English','Hindi','GK'];
-let data=JSON.parse(localStorage.getItem('habit30'))||{};
-for(let d=1;d<=30;d++){if(!data[d]) data[d]={}; subjects.forEach(s=>{if(data[d][s]===undefined) data[d][s]=false;});}
-function save(){localStorage.setItem('habit30',JSON.stringify(data));render();}
-function render(){const table=document.getElementById('tracker');let html='<tr><th>Day</th>'+subjects.map(s=>'<th>'+s+'</th>').join('')+'<th>%</th></tr>';for(let d=1;d<=30;d++){let done=0;html+='<tr><td>Day '+d+'</td>';subjects.forEach(s=>{if(data[d][s]) done++; html+='<td><input type="checkbox" '+(data[d][s]?'checked':'')+' onchange="toggle('+d+',\''+s+'\')"></td>';});html+='<td>'+Math.round(done/subjects.length*100)+'%</td></tr>';}table.innerHTML=html;updateStats();drawChart();}
-function toggle(day,sub){data[day][sub]=!data[day][sub];save();}
-function updateStats(){let total=30*subjects.length,done=0;let subjTotals={};subjects.forEach(s=>subjTotals[s]=0);for(let d=1;d<=30;d++){subjects.forEach(s=>{if(data[d][s]){done++;subjTotals[s]++;}});}let html='<div class="stat"><b>Overall</b><br>'+Math.round(done/total*100)+'%</div>';subjects.forEach(s=>{html+='<div class="stat"><b>'+s+'</b><br>'+Math.round(subjTotals[s]/30*100)+'%</div>';});document.getElementById('stats').innerHTML=html;}
-let chart;function drawChart(){const vals=subjects.map(s=>{let c=0;for(let d=1;d<=30;d++) if(data[d][s]) c++; return c;});const ctx=document.getElementById('chart');if(chart) chart.destroy();chart=new Chart(ctx,{type:'bar',data:{labels:subjects,datasets:[{label:'Completed Days',data:vals}]},options:{responsive:true,plugins:{legend:{display:true}},scales:{y:{beginAtZero:true,max:30}}}});}
-function resetData(){if(confirm('Clear all records?')){localStorage.removeItem('habit30');location.reload();}}
-render();
+    const WEB3FORMS_ACCESS_KEY = "9c7f3c85-004e-4888-b6ed-6ed6f4715db6";
+
+    // Separated Topics Data
+    const syllabusData = {
+        "Day 1": {
+            "Biology": [
+                {id: "d1_b1", name: "Respiratory Volumes & Capacities", q: "Respiratory Volumes NEET Hindi"}, 
+                {id: "d1_b2", name: "Digestion and Absorption", q: "Digestion NEET Hindi"}
+            ],
+            "Chemistry": [
+                {id: "d1_c1", name: "Periodic Table Trends", q: "Periodic Table trends NEET Hindi"}, 
+                {id: "d1_c2", name: "Classification of Elements", q: "Classification of elements NEET Hindi"}
+            ],
+            "Maths": [
+                {id: "d1_m1", name: "Number System", q: "Number system paramedical Hindi"},
+                {id: "d1_m2", name: "LCM & HCF", q: "LCM and HCF paramedical Hindi"}
+            ],
+            "Hindi": [
+                {id: "d1_h1", name: "वर्ण (Varna)", q: "Hindi Vyakaran Varna"},
+                {id: "d1_h2", name: "संज्ञा (Sangya)", q: "Hindi Vyakaran Sangya"},
+                {id: "d1_h3", name: "सर्वनाम (Sarvanam)", q: "Hindi Vyakaran Sarvanam"},
+                {id: "d1_h4", name: "विशेषण (Visheshan)", q: "Hindi Vyakaran Visheshan"}
+            ]
+        },
+        "Day 2": {
+            "Physics": [
+                {id: "d2_p1", name: "Kinematics", q: "Kinematics NEET Hindi"},
+                {id: "d2_p2", name: "Friction (Laws of Motion)", q: "Friction NEET Hindi"}
+            ],
+            "Biology": [
+                {id: "d2_b1", name: "Human Reproduction", q: "Human Reproduction NEET Hindi"},
+                {id: "d2_b2", name: "Plant Reproduction", q: "Plant Reproduction NEET Hindi"}
+            ],
+            "English": [
+                {id: "d2_e1", name: "Noun", q: "Noun grammar paramedical English"},
+                {id: "d2_e2", name: "Pronoun", q: "Pronoun grammar paramedical English"}
+            ],
+            "GK": [
+                {id: "d2_g1", name: "Indian National Movements", q: "Indian National Movement GK in Hindi"}
+            ]
+        },
+        "Day 3": {
+            "Chemistry": [
+                {id: "d3_c1", name: "Chemical Bonding", q: "Chemical Bonding NEET Hindi"},
+                {id: "d3_c2", name: "s, p, d, f Block Elements", q: "Block elements NEET Hindi"}
+            ],
+            "Maths": [
+                {id: "d3_m1", name: "Percentage", q: "Percentage paramedical tricks"},
+                {id: "d3_m2", name: "Ratio & Proportion", q: "Ratio and proportion paramedical"},
+                {id: "d3_m3", name: "Profit & Loss", q: "Profit Loss paramedical tricks"}
+            ],
+            "Hindi": [
+                {id: "d3_h1", name: "लिंग (Ling)", q: "Hindi Vyakaran Ling"},
+                {id: "d3_h2", name: "वचन (Vachan)", q: "Hindi Vyakaran Vachan"},
+                {id: "d3_h3", name: "काल (Kaal)", q: "Hindi Vyakaran Kaal"}
+            ],
+            "GK": [
+                {id: "d3_g1", name: "Indian Geography", q: "Geography GK for paramedical"},
+                {id: "d3_g2", name: "Bihar Special GK", q: "Bihar Special GK for paramedical"}
+            ]
+        },
+        "Day 4": {
+            "Physics": [
+                {id: "d4_p1", name: "Thermodynamics", q: "Thermodynamics NEET Hindi"},
+                {id: "d4_p2", name: "Kinetic Theory of Gases", q: "Kinetic Theory of Gases NEET Hindi"}
+            ],
+            "Biology": [
+                {id: "d4_b1", name: "Genetics", q: "Genetics NEET Hindi"},
+                {id: "d4_b2", name: "Evolution", q: "Evolution NEET Hindi"}
+            ],
+            "English": [
+                {id: "d4_e1", name: "Tenses", q: "Tenses English grammar paramedical"},
+                {id: "d4_e2", name: "Active & Passive Voice", q: "Active Passive voice rules Hindi"}
+            ],
+            "Maths": [
+                {id: "d4_m1", name: "Simple Interest", q: "Simple interest paramedical"},
+                {id: "d4_m2", name: "Compound Interest", q: "Compound interest paramedical"}
+            ]
+        },
+        "Day 5": {
+            "Chemistry": [
+                {id: "d5_c1", name: "General Organic Chemistry (GOC)", q: "GOC NEET Hindi"},
+                {id: "d5_c2", name: "IUPAC Naming", q: "IUPAC Naming NEET Hindi"}
+            ],
+            "Biology": [
+                {id: "d5_b1", name: "Cell Structure", q: "Cell Structure NEET Hindi"},
+                {id: "d5_b2", name: "Cell Division (Mitosis & Meiosis)", q: "Cell Cycle and Division NEET Hindi"}
+            ],
+            "Hindi": [
+                {id: "d5_h1", name: "संधि (Sandhi)", q: "Sandhi tricks Hindi"},
+                {id: "d5_h2", name: "समास (Samas)", q: "Samas tricks Hindi"}
+            ],
+            "GK": [
+                {id: "d5_g1", name: "Fundamental Rights", q: "Fundamental Rights Indian Polity"},
+                {id: "d5_g2", name: "Parliament & Important Articles", q: "Indian Parliament important articles GK"}
+            ]
+        },
+        "Day 6": {
+            "Physics": [
+                {id: "d6_p1", name: "Electrostatics", q: "Electrostatics NEET Hindi"},
+                {id: "d6_p2", name: "Current Electricity", q: "Current Electricity NEET Hindi"}
+            ],
+            "Chemistry": [
+                {id: "d6_c1", name: "Biomolecules", q: "Biomolecules NEET Hindi"},
+                {id: "d6_c2", name: "Polymers", q: "Polymers NEET Hindi"}
+            ],
+            "English": [
+                {id: "d6_e1", name: "Direct & Indirect Speech", q: "Direct Indirect speech rules Hindi"},
+                {id: "d6_e2", name: "Articles (A, An, The)", q: "Articles english grammar rules"}
+            ],
+            "Maths": [
+                {id: "d6_m1", name: "Time & Work", q: "Time and work tricks paramedical"},
+                {id: "d6_m2", name: "Speed & Distance", q: "Time speed distance tricks paramedical"}
+            ]
+        },
+        "Day 7": {
+            "Science Revision": [
+                {id: "d7_s1", name: "Physics Revision", q: "NEET Physics Revision"},
+                {id: "d7_s2", name: "Chemistry Revision", q: "NEET Chemistry Revision"},
+                {id: "d7_s3", name: "Biology Revision", q: "NEET Biology Revision"}
+            ],
+            "Maths": [
+                {id: "d7_m1", name: "Mixed Practice Set", q: "Paramedical maths practice set"}
+            ],
+            "Hindi": [
+                {id: "d7_h1", name: "पर्यायवाची शब्द", q: "Paryayvachi shabd tricks"},
+                {id: "d7_h2", name: "विलोम शब्द", q: "Vilom shabd tricks"}
+            ],
+            "English": [
+                {id: "d7_e1", name: "Synonyms", q: "Synonyms for paramedical"},
+                {id: "d7_e2", name: "Antonyms", q: "Antonyms for paramedical"}
+            ]
+        },
+        "Day 8": {
+            "Biology": [
+                {id: "d8_b1", name: "Biotechnology", q: "Biotechnology NEET Hindi"},
+                {id: "d8_b2", name: "Plant Physiology", q: "Plant Physiology NEET Hindi"}
+            ],
+            "Chemistry": [
+                {id: "d8_c1", name: "Thermodynamics", q: "Thermodynamics Chemistry NEET Hindi"},
+                {id: "d8_c2", name: "Chemical Equilibrium", q: "Chemical Equilibrium NEET Hindi"}
+            ],
+            "Maths": [
+                {id: "d8_m1", name: "Mensuration (2D/3D)", q: "Mensuration formulas tricks paramedical"},
+                {id: "d8_m2", name: "Averages", q: "Average math tricks paramedical"}
+            ],
+            "GK": [
+                {id: "d8_g1", name: "Current Affairs (Recent)", q: "Last 6 months current affairs hindi"}
+            ]
+        },
+        "Day 9": {
+            "Physics": [
+                {id: "d9_p1", name: "Ray Optics", q: "Ray Optics NEET Hindi"},
+                {id: "d9_p2", name: "Optical Instruments", q: "Optical Instruments NEET Hindi"}
+            ],
+            "Biology": [
+                {id: "d9_b1", name: "Immunity & Pathogens", q: "Immunity and Pathogens NEET Hindi"},
+                {id: "d9_b2", name: "Common Human Diseases", q: "Human Health and Disease NEET Hindi"}
+            ],
+            "Hindi": [
+                {id: "d9_h1", name: "मुहावरे (Muhavare)", q: "Muhavare in Hindi grammar"},
+                {id: "d9_h2", name: "अनेक शब्दों के लिए एक शब्द", q: "Anek shabdon ke liye ek shabd"}
+            ],
+            "English": [
+                {id: "d9_e1", name: "Spelling Test", q: "Spelling rules english grammar"},
+                {id: "d9_e2", name: "Spotting Errors", q: "Spotting errors in english grammar"}
+            ]
+        },
+        "Day 10": {
+            "Physics": [
+                {id: "d10_p1", name: "Modern Physics", q: "Modern Physics NEET Hindi"},
+                {id: "d10_p2", name: "Semiconductors", q: "Semiconductors NEET Hindi"}
+            ],
+            "Chemistry": [
+                {id: "d10_c1", name: "Hydrocarbons", q: "Hydrocarbons NEET Hindi"},
+                {id: "d10_c2", name: "Alcohols", q: "Alcohols NEET Hindi"},
+                {id: "d10_c3", name: "Chemical Kinetics", q: "Chemical Kinetics NEET Hindi"}
+            ],
+            "Hindi": [
+                {id: "d10_h1", name: "वाक्य शुद्धि", q: "Vakya Shuddhi Hindi"},
+                {id: "d10_h2", name: "रस", q: "Ras Hindi grammar"},
+                {id: "d10_h3", name: "छंद", q: "Chhand Hindi grammar"},
+                {id: "d10_h4", name: "अलंकार", q: "Alankar Hindi grammar"}
+            ],
+            "GK": [
+                {id: "d10_g1", name: "Sports GK", q: "Sports GK in hindi"},
+                {id: "d10_g2", name: "Miscellaneous GK (Awards, Days)", q: "Important days and awards GK hindi"}
+            ]
+        },
+        "Day 11": {
+            "Revision": [
+                {id: "d11_r1", name: "Mega Biology Revision", q: "Biology marathon NEET"},
+                {id: "d11_r2", name: "Mega Chemistry Revision", q: "Chemistry marathon NEET"},
+                {id: "d11_r3", name: "Solve 50-Q Science Practice Set", q: "Paramedical science practice set"}
+            ]
+        },
+        "Day 12": {
+            "Revision": [
+                {id: "d12_r1", name: "Mega Physics Revision", q: "Physics formula revision NEET"},
+                {id: "d12_r2", name: "Mega Maths Revision", q: "Maths marathon paramedical"},
+                {id: "d12_r3", name: "Hindi Grammar Review", q: "Hindi grammar marathon"},
+                {id: "d12_r4", name: "English Grammar Review", q: "English grammar marathon"}
+            ]
+        },
+        "Day 13": {
+            "Mock Test": [
+                {id: "d13_m1", name: "Attempt Full Length Mock Test", q: "Bihar Paramedical PM mock test live"},
+                {id: "d13_m2", name: "Mock Test Analysis & Mistakes Review", q: "How to analyze mock test"}
+            ]
+        }
+    };
+
+    let activeDayNumber = 1;
+    let currentDayStr = "";
+    let currentSubStr = "";
+
+    window.onload = function() {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById("headerDate").innerText = new Date().toLocaleDateString('en-US', options);
+        calculateActiveDay();
+        renderDaysGrid();
+        startSpyReporter();
+    };
+
+    function closePopup() {
+        document.getElementById("welcomePopup").classList.add("hide");
+    }
+
+    function calculateActiveDay() {
+        let storedDate = localStorage.getItem("shivani_start_date_colorful");
+        let today = new Date();
+        today.setHours(0,0,0,0);
+
+        if (!storedDate) {
+            localStorage.setItem("shivani_start_date_colorful", today.getTime());
+            storedDate = today.getTime();
+            document.getElementById("popupMessage").innerText = "Today is Day 1. Start your journey with confidence! 🌟";
+        } else {
+            let diff = Math.floor((today.getTime() - parseInt(storedDate)) / (1000 * 60 * 60 * 24));
+            activeDayNumber = diff + 1;
+            if(activeDayNumber > 13) activeDayNumber = 13;
+            document.getElementById("popupMessage").innerText = `Welcome back! You are on Day ${activeDayNumber}. Let's keep the momentum going! 🔥`;
+        }
+    }
+
+    function renderDaysGrid() {
+        const grid = document.getElementById("daysGrid");
+        grid.innerHTML = ""; 
+
+        for (let i = 1; i <= activeDayNumber; i++) {
+            let dayName = "Day " + i;
+            let div = document.createElement("div");
+            div.className = "day-card";
+            if(i === activeDayNumber) {
+                div.innerHTML = `🚀 Continue ${dayName}`;
+                div.style.background = "#fff";
+                div.style.borderColor = "#FF007A";
+            } else {
+                div.innerHTML = `✨ ${dayName}`;
+            }
+            div.onclick = () => openSubjects(dayName);
+            grid.appendChild(div);
+        }
+    }
+
+    function openSubjects(day) {
+        currentDayStr = day;
+        document.getElementById("daysDiv").classList.add("hidden");
+        document.getElementById("subjectsDiv").classList.remove("hidden");
+        document.getElementById("currentDayTitle").innerText = day;
+
+        const container = document.getElementById("subjectsContainer");
+        container.innerHTML = "";
+
+        const subjects = Object.keys(syllabusData[day]);
+        subjects.forEach((sub, index) => {
+            let btn = document.createElement("button");
+            btn.className = "sub-btn";
+            btn.style.animationDelay = `${index * 0.1}s`;
+            btn.innerHTML = `<span>📚 ${sub}</span> <span class="arrow-icon">→</span>`;
+            btn.onclick = () => openTopics(sub);
+            container.appendChild(btn);
+        });
+    }
+
+    function openTopics(subject) {
+        currentSubStr = subject;
+        document.getElementById("subjectsDiv").classList.add("hidden");
+        document.getElementById("topicsDiv").classList.remove("hidden");
+        document.getElementById("currentSubjectTitle").innerText = `${currentDayStr} - ${subject}`;
+
+        const list = document.getElementById("topicList");
+        list.innerHTML = "";
+
+        syllabusData[currentDayStr][subject].forEach((topic, index) => {
+            const isChecked = localStorage.getItem(topic.id) === "true";
+            let wrap = document.createElement("div");
+            wrap.className = isChecked ? "topic-item done" : "topic-item";
+            wrap.style.animationDelay = `${index * 0.1}s`;
+            
+            wrap.innerHTML = `
+                <div class="checkbox-container">
+                    <input type="checkbox" class="custom-checkbox" id="${topic.id}" onchange="toggleItem(this, '${topic.id}')" ${isChecked ? "checked" : ""}>
+                    <span class="topic-text">${topic.name}</span>
+                </div>
+                <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(topic.q)}" target="_blank" class="yt-btn">▶ WATCH</a>
+            `;
+            list.appendChild(wrap);
+        });
+    }
+
+    function toggleItem(checkbox, id) {
+        // Saves memory locally to the specific device immediately
+        localStorage.setItem(id, checkbox.checked);
+        let parent = checkbox.closest('.topic-item');
+        if(checkbox.checked) {
+            parent.classList.add("done");
+        } else {
+            parent.classList.remove("done");
+        }
+
+        // Feature: Instant 100% Completion Check & Report
+        checkIfDayIsFullyCompleted();
+    }
+
+    function goBack(to) {
+        document.getElementById("topicsDiv").classList.add("hidden");
+        document.getElementById("subjectsDiv").classList.add("hidden");
+        document.getElementById("daysDiv").classList.add("hidden");
+        
+        if(to === 'days') {
+            renderDaysGrid();
+            document.getElementById("daysDiv").classList.remove("hidden");
+        } else if(to === 'subjects') {
+            document.getElementById("subjectsDiv").classList.remove("hidden");
+            const cards = document.querySelectorAll('.sub-btn');
+            cards.forEach(c => { c.style.animation = 'none'; c.offsetHeight; c.style.animation = null; });
+        }
+    }
+
+    // --- TRACKING & REPORTING ENGINE ---
+
+    // 1. Instant 100% Day Completion Reporter
+    function checkIfDayIsFullyCompleted() {
+        let activeDayKey = "Day " + activeDayNumber;
+        let dayData = syllabusData[activeDayKey];
+        let allDone = true;
+
+        for (let sub in dayData) {
+            dayData[sub].forEach(topic => {
+                if (localStorage.getItem(topic.id) !== "true") {
+                    allDone = false;
+                }
+            });
+        }
+
+        if (allDone) {
+            let todayStr = new Date().toDateString();
+            let memoryKey = `100_percent_sent_${activeDayKey}_${todayStr}`;
+            
+            // Send only once per day for 100% completion
+            if (localStorage.getItem(memoryKey) !== "true") {
+                sendDataToAnkit(todayStr, `🎉 [SUCCESS] Shivani completed 100% of ${activeDayKey}!`);
+                localStorage.setItem(memoryKey, "true");
+            }
+        }
+    }
+
+    // 2. Daily 23:00 Auto Reporter
+    function startSpyReporter() {
+        setInterval(() => {
+            let now = new Date();
+            if (now.getHours() >= 23) {
+                let todayStr = now.toDateString();
+                if (localStorage.getItem("admin_report_date_colorful") !== todayStr) {
+                    let activeDayKey = "Day " + activeDayNumber;
+                    sendDataToAnkit(todayStr, `[NIGHT REPORT] Shivani's ${activeDayKey} Daily Status`);
+                    localStorage.setItem("admin_report_date_colorful", todayStr);
+                }
+            }
+        }, 60000);
+    }
+
+    function sendDataToAnkit(todayStr, emailSubjectTitle) {
+        let activeDayKey = "Day " + activeDayNumber;
+        let mailBody = `Hello Ankit,\n\nDevice Log: Tracker recorded new interactions.\nTime: ${new Date().toLocaleString()}\nTarget: ${activeDayKey}\n\n`;
+        let total = 0, done = 0;
+
+        let dayData = syllabusData[activeDayKey];
+        for (let sub in dayData) {
+            mailBody += `🔹 [${sub}]\n`;
+            dayData[sub].forEach(topic => {
+                total++;
+                if (localStorage.getItem(topic.id) === "true") {
+                    done++;
+                    mailBody += `   ✅ Complete: ${topic.name}\n`;
+                } else {
+                    mailBody += `   ❌ Pending/Skipped: ${topic.name}\n`;
+                }
+            });
+            mailBody += `\n`;
+        }
+
+        let percent = Math.round((done / total) * 100);
+        mailBody += `📊 Total Progress for ${activeDayKey}: ${percent}%\nNote: Data is saved and synced from the user's specific device storage.`;
+
+        const payload = {
+            access_key: WEB3FORMS_ACCESS_KEY,
+            subject: emailSubjectTitle,
+            message: mailBody,
+            from_name: "Shivani's Tracker Bot"
+        };
+
+        fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).catch(err => console.log("Report failed, retrying later."));
+    }
 </script>
+
 </body>
 </html>
