@@ -161,14 +161,32 @@
             100% { opacity: 0; transform: scale(1.6) rotate(45deg) translateY(-25px); }
         }
 
+        /* Sleek Buttons Container */
+        .action-btns {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Spacing between notes and watch button */
+            margin-left: 20px;
+        }
+
         /* Sleek YouTube Button */
         .yt-btn { 
             background: rgba(255, 0, 0, 0.9); color: white; text-decoration: none; padding: 12px 24px; 
             border-radius: 14px; font-size: 15px; font-weight: 800; 
-            margin-left: 20px; transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); 
             box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2); white-space: nowrap; z-index: 2;
         }
         .yt-btn:hover { background: #ff0000; transform: scale(1.08) translateY(-2px); box-shadow: 0 10px 25px rgba(255, 0, 0, 0.4); }
+
+        /* Sleek Notes Button for GK */
+        .notes-btn { 
+            background: rgba(112, 0, 255, 0.9); color: white; text-decoration: none; padding: 12px 24px; 
+            border-radius: 14px; font-size: 15px; font-weight: 800; 
+            transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            box-shadow: 0 5px 15px rgba(112, 0, 255, 0.2); white-space: nowrap; z-index: 2;
+        }
+        .notes-btn:hover { background: #7000ff; transform: scale(1.08) translateY(-2px); box-shadow: 0 10px 25px rgba(112, 0, 255, 0.4); }
+
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -217,7 +235,6 @@
 </head>
 <body>
 
-<!-- Bada & Bold Welcome Popup -->
 <div id="welcomePopup" class="popup-overlay">
     <div class="popup-box">
         <h2>✨ Hello, Shivani!</h2>
@@ -233,13 +250,11 @@
     </div>
 
     <div class="content">
-        <!-- DAYS VIEW -->
         <div id="daysDiv">
             <h3 style="margin-bottom: 25px; font-size: 18px; color: #fff; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; text-shadow: 0 2px 5px rgba(0,0,0,0.3);">Your Timeline</h3>
             <div class="grid" id="daysGrid"></div>
         </div>
 
-        <!-- SUBJECTS VIEW -->
         <div id="subjectsDiv" class="hidden">
             <div class="nav-bar">
                 <button class="back-btn" onclick="goBack('days')">← BACK</button>
@@ -248,7 +263,6 @@
             <div class="list-view" id="subjectsContainer"></div>
         </div>
 
-        <!-- TOPICS VIEW -->
         <div id="topicsDiv" class="hidden">
             <div class="nav-bar">
                 <button class="back-btn" onclick="goBack('subjects')">← BACK</button>
@@ -258,15 +272,16 @@
         </div>
     </div>
 
-    <!-- Elegant Footer Signature -->
     <div class="footer-watermark">
         Developed by love with Ankit <span>💖✨</span>
     </div>
 </div>
 
 <script>
+    // 🔥 Web3Forms API Key is exactly as provided
     const WEB3FORMS_ACCESS_KEY = "9c7f3c85-004e-4888-b6ed-6ed6f4715db6";
 
+    // 🔥 Added the /preview links for direct seamless viewing without Google Drive UI
     const syllabusData = {
         "Day 1": {
             "Biology": [
@@ -302,7 +317,7 @@
                 {id: "d2_e2", name: "Pronoun", q: "Pronoun grammar paramedical English"}
             ],
             "GK": [
-                {id: "d2_g1", name: "Indian National Movements", q: "Indian National Movement GK in Hindi"}
+                {id: "d2_g1", name: "Indian National Movements", q: "Indian National Movement GK in Hindi", notes_link: "https://drive.google.com/file/d/1OjxyJwle90gE7Mk7HDCPB5CN9LCzTOno/preview"}
             ]
         },
         "Day 3": {
@@ -321,8 +336,8 @@
                 {id: "d3_h3", name: "काल (Kaal)", q: "Hindi Vyakaran Kaal"}
             ],
             "GK": [
-                {id: "d3_g1", name: "Indian Geography", q: "Geography GK for paramedical"},
-                {id: "d3_g2", name: "Bihar Special GK", q: "Bihar Special GK for paramedical"}
+                {id: "d3_g1", name: "Indian Geography", q: "Geography GK for paramedical", notes_link: "https://drive.google.com/file/d/1dvQ-KODwtC6YMTQjM6mS5nGmAL5FsIMQ/preview"},
+                {id: "d3_g2", name: "Bihar Special GK", q: "Bihar Special GK for paramedical", notes_link: "https://drive.google.com/file/d/1cAQWs7rypo1AabA8ARZTmc3u3FimQvY2/preview"}
             ]
         },
         "Day 4": {
@@ -357,8 +372,8 @@
                 {id: "d5_h2", name: "समास (Samas)", q: "Samas tricks Hindi"}
             ],
             "GK": [
-                {id: "d5_g1", name: "Fundamental Rights", q: "Fundamental Rights Indian Polity"},
-                {id: "d5_g2", name: "Parliament & Important Articles", q: "Indian Parliament important articles GK"}
+                {id: "d5_g1", name: "Fundamental Rights", q: "Fundamental Rights Indian Polity", notes_link: "https://drive.google.com/file/d/1AXwHannshZNwK5G-dzQ9GUSuxYk6vFky/preview"},
+                {id: "d5_g2", name: "Parliament & Important Articles", q: "Indian Parliament important articles GK", notes_link: "https://drive.google.com/file/d/1zZnQsQaSkCJtiahS6x1_z-YhAeBv38Vs/preview"}
             ]
         },
         "Day 6": {
@@ -411,7 +426,7 @@
                 {id: "d8_m2", name: "Averages", q: "Average math tricks paramedical"}
             ],
             "GK": [
-                {id: "d8_g1", name: "Current Affairs (Recent)", q: "Last 6 months current affairs hindi"}
+                {id: "d8_g1", name: "Current Affairs (Recent)", q: "Last 6 months current affairs hindi", notes_link: "https://drive.google.com/file/d/1WbPW7Go1fx9AtccM9Xdpm-uaTP_d3OGR/preview"}
             ]
         },
         "Day 9": {
@@ -449,8 +464,8 @@
                 {id: "d10_h4", name: "अलंकार", q: "Alankar Hindi grammar"}
             ],
             "GK": [
-                {id: "d10_g1", name: "Sports GK", q: "Sports GK in hindi"},
-                {id: "d10_g2", name: "Miscellaneous GK (Awards, Days)", q: "Important days and awards GK hindi"}
+                {id: "d10_g1", name: "Sports GK", q: "Sports GK in hindi", notes_link: "https://drive.google.com/file/d/17YzOElhx5ZgQZdUZDt_hxMU0E7_TnHcJ/preview"},
+                {id: "d10_g2", name: "Miscellaneous GK (Awards, Days)", q: "Important days and awards GK hindi", notes_link: "https://drive.google.com/file/d/1dvsx7mpLnGbdaCCeTwyFNGpYYCZEBwbh/preview"}
             ]
         },
         "Day 11": {
@@ -485,7 +500,7 @@
         document.getElementById("headerDate").innerText = new Date().toLocaleDateString('en-US', options);
         calculateActiveDay();
         renderDaysGrid();
-        startSpyReporter();
+        startSpyReporter(); // Tracker start ho gaya
     };
 
     function closePopup() {
@@ -564,12 +579,21 @@
             wrap.className = isChecked ? "topic-item done" : "topic-item";
             wrap.style.animationDelay = `${index * 0.1}s`;
             
+            // 🔥 Yahan notes button ka logic add kiya hai
+            let notesButton = "";
+            if(topic.notes_link) {
+                notesButton = `<a href="${topic.notes_link}" target="_blank" class="notes-btn">📄 NOTES</a>`;
+            }
+
             wrap.innerHTML = `
                 <div class="checkbox-container">
                     <input type="checkbox" class="custom-checkbox" id="${topic.id}" onchange="toggleItem(this, '${topic.id}')" ${isChecked ? "checked" : ""}>
                     <span class="topic-text">${topic.name}</span>
                 </div>
-                <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(topic.q)}" target="_blank" class="yt-btn">▶ WATCH</a>
+                <div class="action-btns">
+                    ${notesButton}
+                    <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(topic.q)}" target="_blank" class="yt-btn">▶ WATCH</a>
+                </div>
             `;
             list.appendChild(wrap);
         });
@@ -650,7 +674,7 @@
                     localStorage.setItem("admin_report_elite_v3", todayStr);
                 }
             }
-        }, 60000);
+        }, 60000); // Har 1 minute me check karega
     }
 
     function sendDataToAnkit(todayStr, emailSubjectTitle) {
